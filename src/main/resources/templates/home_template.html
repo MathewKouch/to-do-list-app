@@ -22,7 +22,6 @@
         <table>
             <tr th:each="task: ${tasks}">
                 <td>
-                    <!--                <input type="hidden" name="taskIds[]" th:value="${task.taskId}"/>-->
                     <input type="checkbox" name="taskStatusList[]" th:value="${task.taskId}" th:checked="${task.taskStatus == 'COMPLETE'}"/>
                 </td>
                 <td>

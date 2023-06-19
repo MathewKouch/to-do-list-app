@@ -63,7 +63,6 @@ public class HomeController {
         List<Task> allTasks =  this.personService.getTaskByTaskListId(listId);
 
         if (taskStatusList!=null){
-            int i = 0;
             for (Task task: allTasks){
                 Long taskIDLong = task.getTaskId();
                 Task prevTask = personService.getTaskByTaskId(taskIDLong);
@@ -76,16 +75,13 @@ public class HomeController {
                     prevTask.setTaskStatus("INCOMPLETE");
                 }
                 personService.addNewTask(prevTask);
-                i++;
             }
         } else {
-            int i = 0;
             for (Task task: allTasks){
                 Long taskIDLong = task.getTaskId();
                 Task prevTask = personService.getTaskByTaskId(taskIDLong);
                 prevTask.setTaskStatus("INCOMPLETE");
                 personService.addNewTask(prevTask);
-                i++;
             }
         }
 
