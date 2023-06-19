@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>To-Do List App</title>
+</head>
+<div th:replace="fragments :: navbar"></div>
+<body>
+<h1 th:text="${userFirstName} == null ? 'Welcome to To-Do List App': 'Hi, ' + ${userFirstName} + '!'"> </h1>
+
+<a href="/tasks/show_favourite">Your To Do</a>
+</body>
+</html>

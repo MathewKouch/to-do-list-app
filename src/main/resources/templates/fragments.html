@@ -1,0 +1,9 @@
+<nav th:fragment="navbar">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li th:if="${isLoggedIn != null and isLoggedIn}"><a href="/lists">Lists</a></li>
+    <li th:if="${isLoggedIn != null and isLoggedIn}"><a href="/sign-out">Sign Out</a></li>
+    <li th:if="${isLoggedIn == null or !isLoggedIn}"><a href="/login">Log In</a></li>
+    <li th:if="${isLoggedIn == null or !isLoggedIn}"><a href="/signup">Sign Up</a></li>
+  </ul>
+</nav>
