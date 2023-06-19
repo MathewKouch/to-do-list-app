@@ -9,7 +9,6 @@
 <h1 th:text="${userFirstName} == null ? 'Welcome to To-Do List App': 'Hi, ' + ${userFirstName} + '!'"> </h1>
 
 <div th:if="${isLoggedIn} and ${taskListId}">
-    <!--<a href="/tasks/show_favourite">Your To Do</a>-->
     <h1 th:text="${taskListName}"></h1>
     <form action="/home/addTask" method="post">
         <label for="description">New Task</label>

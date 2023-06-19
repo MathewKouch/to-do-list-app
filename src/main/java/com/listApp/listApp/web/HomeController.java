@@ -98,7 +98,6 @@ public class HomeController {
             }
         }
 
-//        return "redirect:/home_template?taskListId=" + listId.toString();
         return "redirect:/home";
     }
 
