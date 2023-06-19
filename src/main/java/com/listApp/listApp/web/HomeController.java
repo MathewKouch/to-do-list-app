@@ -32,7 +32,7 @@ public class HomeController {
 
         model.addAttribute("isLoggedIn", isLoggedIn);
 
-        if (personID != null && isLoggedIn) {
+        if (personID != null && isLoggedIn!=null) {
             Long listId = taskListService.getPersonFavTaskList(personID);
             TaskList favTask = taskListService.getTaskListByTaskListId(listId);
             String favTaskName = favTask.getTaskListName();
@@ -48,7 +48,7 @@ public class HomeController {
             }
         }
 
-        if (personID==null){
+        if (personID==null || isLoggedIn==null){
             session.setAttribute("isLoggedIn", false);
         }
         return "home_template";
