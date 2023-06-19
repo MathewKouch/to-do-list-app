@@ -54,33 +54,74 @@ public class HomeController {
         return "home_template";
     }
 
-//    @RequestMapping
-//    public String renderHome(@RequestParam(value="taskListId", required=false) Long taskListId,
-//                              Model model, HttpSession session) {
-//        Boolean isLoggedIn = (Boolean) session.getAttribute("isLoggedIn");
-//        Long personID = (Long) session.getAttribute("userID");
-//
-//        if (personID != null && isLoggedIn && taskListId!=null) {
-//            List<Task> allTasks = this.personService.getTaskByTaskListId(taskListId);
-//            TaskList thisTaskList = this.taskListService.getTaskListByTaskListId(taskListId);
-//
-//            String taskListName = thisTaskList.getTaskListName();
-//            sortTasks(allTasks);
-//
-//            model.addAttribute("tasks", allTasks);
-//            model.addAttribute("taskListId", taskListId);
-//            model.addAttribute("taskListName", taskListName);
-//        }
-//
-//        if (isLoggedIn!=null) {
-//            session.setAttribute("isLoggedIn", isLoggedIn);
-//            return "home_template";
-//        } else {
-//            session.setAttribute("isLoggedIn", false);
-//            return "home_template";
-//        }
-//    }
+    @PostMapping("/updateFavTaskList")
+    public String updateTask(
+            @RequestParam(value="taskStatusList[]", required=false) List<String> taskStatusList,
+            @RequestParam(value="taskDescription[]", required=false) List<String> taskDescription,
+            @RequestParam("taskListId") Long listId){
 
+        List<Task> allTasks =  this.personService.getTaskByTaskListId(listId);
+
+        if (taskStatusList!=null){
+            int i = 0;
+            for (Task task: allTasks){
+                Long taskIDLong = task.getTaskId();
+                Task prevTask = personService.getTaskByTaskId(taskIDLong);
+
+                String taskID = taskIDLong.toString();
+
+                if (taskStatusList.contains(taskID)){
+                    prevTask.setTaskStatus("COMPLETE");
+                } else {
+                    prevTask.setTaskStatus("INCOMPLETE");
+                }
+                personService.addNewTask(prevTask);
+                i++;
+            }
+        } else {
+            int i = 0;
+            for (Task task: allTasks){
+                Long taskIDLong = task.getTaskId();
+                Task prevTask = personService.getTaskByTaskId(taskIDLong);
+                prevTask.setTaskStatus("INCOMPLETE");
+                personService.addNewTask(prevTask);
+                i++;
+            }
+        }
+
+        if (taskDescription!=null){
+            int i = 0;
+            for (Task task2: allTasks){
+                Long taskIDLong2 = task2.getTaskId();
+                Task prevTask2 = personService.getTaskByTaskId(taskIDLong2);
+
+                String newDesc = taskDescription.get(i);
+                prevTask2.setDescription(newDesc);
+                personService.addNewTask(prevTask2);
+                i++;
+            }
+        }
+
+//        return "redirect:/home_template?taskListId=" + listId.toString();
+        return "redirect:/home";
+    }
+
+    @PostMapping("/addTask")
+    public String addTask(@RequestParam("description") String description,
+                          @RequestParam("taskListId") Long listId,
+                          HttpSession session){
+        Long userID = (Long) session.getAttribute("userID");
+
+        Task newTask = new Task();
+        newTask.setPersonTaskID(userID);
+        newTask.setParentListId(listId);
+        newTask.setDescription(description);
+        newTask.setTaskStatus("INCOMPLETE");
+
+        personService.addNewTask(newTask);
+        return "redirect:/home";
+
+    }
     @GetMapping("/sign-out")
     public String signOut(SessionStatus sessionStatus) {
         sessionStatus.setComplete(); // Clear the session attributes
