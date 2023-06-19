@@ -82,7 +82,10 @@ public class ListsController {
             }
 
         } else {
-            return "redirect:/access_denied.html";
+            for (TaskList aTaskList: allTaskLists){
+                aTaskList.setTaskListFavourite(false);
+                taskListService.addNewTaskList(aTaskList);
+            }
         }
 
         // Updating list names

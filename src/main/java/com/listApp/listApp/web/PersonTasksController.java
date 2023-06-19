@@ -96,12 +96,35 @@ public class PersonTasksController {
                 } else {
                     prevTask.setTaskStatus("INCOMPLETE");
                 }
-                String newDesc = taskDescription.get(i);
-                prevTask.setDescription(newDesc);
+//                String newDesc = taskDescription.get(i);
+//                prevTask.setDescription(newDesc);
+                personService.addNewTask(prevTask);
+                i++;
+            }
+        } else {
+            int i = 0;
+            for (Task task: allTasks){
+                Long taskIDLong = task.getTaskId();
+                Task prevTask = personService.getTaskByTaskId(taskIDLong);
+                prevTask.setTaskStatus("INCOMPLETE");
                 personService.addNewTask(prevTask);
                 i++;
             }
         }
+
+        if (taskDescription!=null){
+            int i = 0;
+            for (Task task2: allTasks){
+                Long taskIDLong2 = task2.getTaskId();
+                Task prevTask2 = personService.getTaskByTaskId(taskIDLong2);
+
+                String newDesc = taskDescription.get(i);
+                prevTask2.setDescription(newDesc);
+                personService.addNewTask(prevTask2);
+                i++;
+            }
+        }
+
         return "redirect:/tasks?taskListId=" + listId.toString();
     }
 
