@@ -8,6 +8,41 @@
 <body>
 <h1 th:text="${userFirstName} == null ? 'Welcome to To-Do List App': 'Hi, ' + ${userFirstName} + '!'"> </h1>
 
-<a href="/tasks/show_favourite">Your To Do</a>
+<div th:if="${isLoggedIn} and ${taskListId}">
+    <!--<a href="/tasks/show_favourite">Your To Do</a>-->
+    <h1 th:text="${taskListName}"></h1>
+    <form action="/tasks/addTask" method="post">
+        <label for="description">New Task</label>
+        <input type="text" name="description" id="description" placeholder="Task">
+        <input type="hidden" name="taskListId" th:value="${taskListId}">
+        <button type="submit">Add</button>
+    </form>
+
+    <form action="/tasks/updateTask" method="post">
+        <table>
+            <tr th:each="task: ${tasks}">
+                <td>
+                    <!--                <input type="hidden" name="taskIds[]" th:value="${task.taskId}"/>-->
+                    <input type="checkbox" name="taskStatusList[]" th:value="${task.taskId}" th:checked="${task.taskStatus == 'COMPLETE'}"/>
+                </td>
+                <td>
+                    <input type="text" name="taskDescription[]" th:value="${task.description}"/>
+                </td>
+            </tr>
+        </table>
+        <input type="hidden" name="taskListId" th:value="${taskListId}"/>
+        <button type="submit">Update</button>
+    </form>
+</div>
+
+
+<div th:if="${isLoggedIn}!=true">
+    <h2><a href="/signup">Create</a> an account</h2>
+</div>
+<div th:if="${isLoggedIn}==true and ${taskListId}==null">
+    <h2><a href="/lists">Create</a> a to do list</h2>
+</div>
+
+
 </body>
 </html>

@@ -79,38 +79,23 @@ public class PersonTasksController {
     public String updateTask(
           @RequestParam(value="taskStatusList[]", required=false) List<String> taskStatusList,
           @RequestParam(value="taskDescription[]", required=false) List<String> taskDescription,
-          @RequestParam("taskListId") Long listId,
-          HttpSession session, Model model){
+          @RequestParam("taskListId") Long listId){
 
-        Long userID = (Long) session.getAttribute("userID");
-        List<Task> allTasks =  this.personService.getTaskByParentListId(listId);
+        List<Task> allTasks =  this.personService.getTaskByTaskListId(listId);
 
-
-        for (Task task: allTasks){
-            Long taskIDLong = task.getTaskId();
-            Task prevTask = personService.getTaskByTaskId(taskIDLong);
-
-            String taskID = taskIDLong.toString();
-            String taskStatus = prevTask.getTaskStatus();
-
-            if (taskStatusList.contains(taskID)){
-                prevTask.setTaskStatus("COMPLETE");
-            } else if (taskStatus.equals("COMPLETE") && !taskStatusList.contains(taskStatus)) {
-                prevTask.setTaskStatus("INCOMPLETE");
-            }
-//            else if (taskStatus.equals("INCOMPLETE") && taskStatusList.contains(taskStatus)) {
-//                prevTask.setTaskStatus("COMPLETE");
-//            }
-
-        }
-
-
-        if (taskDescription!=null){
+        if (taskStatusList!=null){
             int i = 0;
             for (Task task: allTasks){
                 Long taskIDLong = task.getTaskId();
                 Task prevTask = personService.getTaskByTaskId(taskIDLong);
 
+                String taskID = taskIDLong.toString();
+
+                if (taskStatusList.contains(taskID)){
+                    prevTask.setTaskStatus("COMPLETE");
+                } else {
+                    prevTask.setTaskStatus("INCOMPLETE");
+                }
                 String newDesc = taskDescription.get(i);
                 prevTask.setDescription(newDesc);
                 personService.addNewTask(prevTask);
@@ -124,6 +109,9 @@ public class PersonTasksController {
     public String renderFavouriteTaskList(HttpSession session){
         Long userID = (Long) session.getAttribute("userID");
         Long listId = taskListService.getPersonFavTaskList(userID);
-        return "redirect:/tasks?taskListId=" + listId.toString();
+        if (listId!=userID){
+            return "redirect:/tasks?taskListId=" + listId.toString();
+        }
+        return "redirect:/lists";
     }
 }

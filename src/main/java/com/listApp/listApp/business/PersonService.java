@@ -42,23 +42,6 @@ public class PersonService {
 
     public List<Task> getTaskByTaskListId(Long taskListId) {
         List<Task> tasks = this.taskRepository.findTaskByParentListId(taskListId);
-//        Map<Long, Task> TaskMap = new HashMap();
-//        tasks.forEach(task -> {
-//            Task aTask = new Task();
-//            aTask.setTaskId(task.getTaskId());
-//            aTask.setParentListId(task.getParentListId());
-//            aTask.setTaskStatus(task.getTaskStatus());
-//            aTask.setPersonTaskID(task.getPersonTaskID());
-//            aTask.setDescription(task.getDescription());
-//            aTask.setDateCreated(task.getDateCreated());
-//            TaskMap.put(task.getTaskId(), aTask);
-//        });
-//
-//        List<Task> allTasksByPersonId = new ArrayList<>();
-//        for (Long id : TaskMap.keySet()) {
-//            allTasksByPersonId.add(TaskMap.get(id));
-//        }
-
         return tasks;
     }
     public List<Task> getAllTasks() {
