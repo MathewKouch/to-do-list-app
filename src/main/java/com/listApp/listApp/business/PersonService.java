@@ -96,10 +96,11 @@ public class PersonService {
         return this.taskRepository.findTaskByTaskId(taskId);
     }
 
-//    public void updateTask(Task task, Long taskID){
-//        this.taskRepository.save
-//    }
     public List<Task> getTaskByParentListId(Long parentListId){
         return this.taskRepository.findTaskByParentListId(parentListId);
+    }
+
+    public void deleteTaskByTaskId(Long taskId){
+        this.taskRepository.deleteById(taskId);
     }
 }

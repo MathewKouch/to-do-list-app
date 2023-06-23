@@ -37,7 +37,7 @@ public class PersonTasksController {
             TaskList thisTaskList = this.taskListService.getTaskListByTaskListId(taskListId);
 
             String taskListName = thisTaskList.getTaskListName();
-            sortTasks(allTasks);
+//            sortTasks(allTasks);
 
             model.addAttribute("tasks", allTasks);
             model.addAttribute("taskListId", taskListId);
@@ -53,12 +53,35 @@ public class PersonTasksController {
 
     private void sortTasks(List<Task> tasks) {
         Comparator<Task> comparator = Comparator
-                .comparing(Task::getDateCreated);
-//                .thenComparing(Comparator.comparing(Task::getTaskStatus).reversed());
+                .comparing(Task::getDateCreated)
+                .thenComparing(Comparator.comparing(Task::getTaskStatus).reversed());
 
         tasks.sort(comparator);
     }
 
+    @RequestMapping("/edit")
+    public String renderEditTasks(@RequestParam(value="taskListId", required=false) Long taskListId,
+                              Model model, HttpSession session) {
+        Boolean isLoggedIn = (Boolean) session.getAttribute("isLoggedIn");
+        Long personID = (Long) session.getAttribute("userID");
+
+        if (personID != null && isLoggedIn && taskListId!=null) {
+            List<Task> allTasks = this.personService.getTaskByTaskListId(taskListId);
+            TaskList thisTaskList = this.taskListService.getTaskListByTaskListId(taskListId);
+
+            String taskListName = thisTaskList.getTaskListName();
+
+            model.addAttribute("tasks", allTasks);
+            model.addAttribute("taskListId", taskListId);
+            model.addAttribute("taskListName", taskListName);
+
+            return "edit_to-do-list";
+        } else if (personID != null && isLoggedIn && taskListId==null) {
+            return "redirect:/lists.html";
+        } else {
+            return "redirect:/access_denied.html";
+        }
+    }
     @PostMapping("/addTask")
     public String addTask(@RequestParam("description") String description,
                           @RequestParam("taskListId") Long listId,
@@ -79,6 +102,8 @@ public class PersonTasksController {
     public String updateTask(
           @RequestParam(value="taskStatusList[]", required=false) List<String> taskStatusList,
           @RequestParam(value="taskDescription[]", required=false) List<String> taskDescription,
+          @RequestParam(value="deleteTasks[]", required=false) List<String> deleteTasks,
+
           @RequestParam("taskListId") Long listId){
 
         List<Task> allTasks =  this.personService.getTaskByTaskListId(listId);
@@ -96,8 +121,7 @@ public class PersonTasksController {
                 } else {
                     prevTask.setTaskStatus("INCOMPLETE");
                 }
-//                String newDesc = taskDescription.get(i);
-//                prevTask.setDescription(newDesc);
+
                 personService.addNewTask(prevTask);
                 i++;
             }
@@ -125,6 +149,12 @@ public class PersonTasksController {
             }
         }
 
+        if (deleteTasks!=null){
+            for (String taskIdDeleted: deleteTasks){
+                Long taskIdDeletedLong = Long.valueOf(taskIdDeleted);
+                personService.deleteTaskByTaskId(taskIdDeletedLong);
+            }
+        }
         return "redirect:/tasks?taskListId=" + listId.toString();
     }
 

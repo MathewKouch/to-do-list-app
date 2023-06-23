@@ -18,15 +18,12 @@
     <table>
         <tr th:each="aTaskList: ${tasklists}">
             <td>
-                <!--                <input type="hidden" name="taskIds[]" th:value="${task.taskId}"/>-->
                 <input type="checkbox" name="taskFavourited[]" th:value="${aTaskList.taskListId}" th:checked="${aTaskList.taskListFavourite}"/>
             </td>
             <td>
                 <input type="text" name="taskListName[]" th:value="${aTaskList.taskListName}"/>
             </td>
             <td><a th:href=" '/tasks?taskListId=' + ${aTaskList.taskListId}">tasks</a></td>
-<!--            <td><a href="/tasks">tasks</a></td>-->
-
         </tr>
     </table>
     <button type="submit">Update</button>

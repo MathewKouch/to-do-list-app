@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="TASK")
@@ -27,7 +28,7 @@ public class Task {
 
     @CreationTimestamp
     @Column(name="DATE_CREATED")
-    private Date dateCreated;
+    private LocalDateTime dateCreated;
 
     public long getTaskId() {
         return taskId;
@@ -61,11 +62,11 @@ public class Task {
         this.taskStatus = taskStatus;
     }
 
-    public Date getDateCreated() {
+    public LocalDateTime getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Date dateCreated) {
+    public void setDateCreated(LocalDateTime dateCreated) {
         this.dateCreated = dateCreated;
     }
 

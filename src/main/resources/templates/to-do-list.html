@@ -10,26 +10,28 @@
 <h1 th:text="${taskListName}"></h1>
 <form action="/tasks/addTask" method="post">
     <label for="description">New Task</label>
-    <input type="text" name="description" id="description" placeholder="Task">
+    <input type="text" name="description" id="description" placeholder="Task" required="true">
     <input type="hidden" name="taskListId" th:value="${taskListId}">
     <button type="submit">Add</button>
 </form>
 
-<form action="/tasks/updateTask" method="post">
+<form action="/tasks/edit">
     <table>
         <tr th:each="task: ${tasks}">
             <td>
-<!--                <input type="hidden" name="taskIds[]" th:value="${task.taskId}"/>-->
+                <!--                <input type="hidden" name="taskIds[]" th:value="${task.taskId}"/>-->
                 <input type="checkbox" name="taskStatusList[]" th:value="${task.taskId}" th:checked="${task.taskStatus == 'COMPLETE'}"/>
             </td>
             <td>
-                <input type="text" name="taskDescription[]" th:value="${task.description}"/>
-            </td>
+                <input type="text" name="taskDescription[]" th:value="${task.description}" required="true"/>
+<!--                <p th:text="${task.dateCreated}"></p>            </td>-->
         </tr>
     </table>
     <input type="hidden" name="taskListId" th:value="${taskListId}"/>
-    <button type="submit">Update</button>
+    <button type="submit">Edit</button>
 </form>
+<button><a href="/lists">Lists</a></button>
+
 
 </body>
 </html>

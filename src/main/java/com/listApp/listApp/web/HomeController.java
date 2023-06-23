@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -36,15 +37,16 @@ public class HomeController {
             Long listId = taskListService.getPersonFavTaskList(personID);
             TaskList favTask = taskListService.getTaskListByTaskListId(listId);
             String favTaskName = favTask.getTaskListName();
-
             String userFirstName = (String) session.getAttribute("userFirstName");
             model.addAttribute("userFirstName", userFirstName);
 
             if (listId!=personID){
                 List<Task> allTasks = this.personService.getTaskByTaskListId(listId);
+//                sortTasks(allTasks);
                 model.addAttribute("taskListId", listId);
                 model.addAttribute("taskListName", favTaskName);
                 model.addAttribute("tasks", allTasks );
+                model.addAttribute("update", false);
             }
         }
 
@@ -58,10 +60,10 @@ public class HomeController {
     public String updateTask(
             @RequestParam(value="taskStatusList[]", required=false) List<String> taskStatusList,
             @RequestParam(value="taskDescription[]", required=false) List<String> taskDescription,
-            @RequestParam("taskListId") Long listId){
+            @RequestParam("taskListId") Long listId, Model model){
 
         List<Task> allTasks =  this.personService.getTaskByTaskListId(listId);
-
+        model.addAttribute("update", true);
         if (taskStatusList!=null){
             for (Task task: allTasks){
                 Long taskIDLong = task.getTaskId();
@@ -121,5 +123,13 @@ public class HomeController {
     public String signOut(SessionStatus sessionStatus) {
         sessionStatus.setComplete(); // Clear the session attributes
         return "redirect:/login"; // Redirect to the login page
+    }
+
+    private void sortTasks(List<Task> tasks) {
+        Comparator<Task> comparator = Comparator
+                .comparing(Task::getDateCreated)
+                .thenComparing(Comparator.comparing(Task::getTaskStatus).reversed());
+
+        tasks.sort(comparator);
     }
 }
