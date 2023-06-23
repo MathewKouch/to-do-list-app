@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Your To Do List</title>
+</head>
+<body>
+<div th:replace="fragments :: navbar"></div>
+
+<h1 th:text="${taskListName}"></h1>
+<form action="/tasks/addTask" method="post">
+    <label for="description">New Task</label>
+    <input type="text" name="description" id="description" placeholder="Task" required="true">
+    <input type="hidden" name="taskListId" th:value="${taskListId}">
+    <button type="submit">Add</button>
+</form>
+
+<form action="/tasks/updateTask" method="post">
+    <table>
+        <tr th:each="task: ${tasks}">
+            <td>
+                <input type="checkbox" name="taskStatusList[]" th:value="${task.taskId}" th:checked="${task.taskStatus == 'COMPLETE'}"/>
+            </td>
+            <td>
+                <input type="text" name="taskDescription[]" th:value="${task.description}" required="true"/>
+<!--                <p th:text="${task.dateCreated}"></p>-->
+            </td>
+            <td>
+                <input type="checkbox" name="deleteTasks[]" th:value="${task.taskId}"/>
+            </td>
+        </tr>
+    </table>
+    <input type="hidden" name="taskListId" th:value="${taskListId}"/>
+    <button type="submit">Update</button>
+</form>
+
+</body>
+</html>
